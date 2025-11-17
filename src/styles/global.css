@@ -1,0 +1,273 @@
+/* WellWise Drilling Calculator - Global Styles */
+
+:root {
+  --primary-blue: #0d6efd;
+  --secondary-gray: #6c757d;
+  --success-green: #198754;
+  --info-cyan: #0dcaf0;
+  --warning-yellow: #ffc107;
+  --danger-red: #dc3545;
+  --dark-gray: #212529;
+  --light-gray: #f8f9fa;
+}
+
+/* Global Styles */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+}
+
+.display-4, .display-5 {
+  font-weight: 700;
+}
+
+/* Accessibility - Focus States */
+*:focus {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+button:focus,
+.btn:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Card Enhancements */
+.card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Responsive Tables */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Chart Containers */
+.recharts-wrapper {
+  margin: 0 auto;
+}
+
+/* Loading States */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .display-4 {
+    font-size: 2.5rem;
+  }
+
+  .display-5 {
+    font-size: 2rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .table {
+    font-size: 0.9rem;
+  }
+
+  /* Stack chart controls on mobile */
+  .recharts-wrapper {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .display-5 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .no-print,
+  .navbar,
+  footer,
+  .btn,
+  button {
+    display: none !important;
+  }
+
+  .card {
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+
+  body {
+    background-color: white;
+  }
+
+  .card-header {
+    background-color: #f8f9fa !important;
+    color: black !important;
+  }
+}
+
+/* Custom Range Slider */
+.form-range::-webkit-slider-thumb {
+  background-color: var(--primary-blue);
+}
+
+.form-range::-moz-range-thumb {
+  background-color: var(--primary-blue);
+}
+
+/* Badge Styles */
+.badge {
+  font-weight: 500;
+  padding: 0.35em 0.65em;
+}
+
+/* Alert Enhancements */
+.alert {
+  border-left: 4px solid;
+}
+
+.alert-success {
+  border-left-color: var(--success-green);
+}
+
+.alert-info {
+  border-left-color: var(--info-cyan);
+}
+
+.alert-warning {
+  border-left-color: var(--warning-yellow);
+}
+
+.alert-danger {
+  border-left-color: var(--danger-red);
+}
+
+/* Footer Styles */
+footer {
+  margin-top: auto;
+}
+
+/* Utility Classes */
+.text-primary {
+  color: var(--primary-blue) !important;
+}
+
+.bg-primary {
+  background-color: var(--primary-blue) !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Smooth Transitions */
+* {
+  transition: background-color 0.15s ease-in-out,
+              border-color 0.15s ease-in-out,
+              color 0.15s ease-in-out;
+}
+
+/* Form Control Enhancements */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Gap Utility for Flexbox */
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-3 {
+  gap: 1rem;
+}
+
+/* Min Height for Pages */
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+/* Navbar Brand Enhancement */
+.navbar-brand {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Chart Tooltips */
+.recharts-tooltip-wrapper {
+  z-index: 1000;
+}
+
+/* Modal Enhancements */
+.modal-content {
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  border-bottom: 2px solid #dee2e6;
+}
+
+.modal-footer {
+  border-top: 2px solid #dee2e6;
+}
