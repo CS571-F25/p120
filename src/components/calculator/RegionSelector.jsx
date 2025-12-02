@@ -1,7 +1,7 @@
 import { Form } from 'react-bootstrap';
 import { REGIONAL_MULTIPLIERS, formatRegionName, formatCountryName } from '../../utils/calculators/regionalData';
 
-const RegionSelector = ({ region, country, onRegionChange }) => {
+const RegionSelector = ({ region, country, onRegionChange, compact = false }) => {
   const regions = Object.keys(REGIONAL_MULTIPLIERS);
 
   const handleChange = (e) => {
@@ -10,9 +10,13 @@ const RegionSelector = ({ region, country, onRegionChange }) => {
   };
 
   return (
-    <Form.Group className="mb-3">
-      <Form.Label>Region & Country</Form.Label>
+    <Form.Group className={compact ? "mb-2" : "mb-3"}>
+      <Form.Label htmlFor="region-select" className={compact ? "small mb-1" : ""}>
+        Region & Country
+      </Form.Label>
       <Form.Select
+        id="region-select"
+        size={compact ? "sm" : undefined}
         value={`${region}|${country}`}
         onChange={handleChange}
         aria-label="Select drilling region and country"
@@ -25,15 +29,17 @@ const RegionSelector = ({ region, country, onRegionChange }) => {
                 value={`${regionKey}|${countryKey}`}
               >
                 {formatCountryName(countryKey)}
-                (Cost Multiplier: {REGIONAL_MULTIPLIERS[regionKey][countryKey]}x)
+                ({REGIONAL_MULTIPLIERS[regionKey][countryKey]}x)
               </option>
             ))}
           </optgroup>
         ))}
       </Form.Select>
-      <Form.Text className="text-muted">
-        Regional multipliers account for local labor, equipment, and regulatory costs
-      </Form.Text>
+      {!compact && (
+        <Form.Text className="text-muted">
+          Regional multipliers account for local labor, equipment, and regulatory costs
+        </Form.Text>
+      )}
     </Form.Group>
   );
 };

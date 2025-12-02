@@ -1,28 +1,38 @@
 import { Container, Card, Row, Col, Badge, Accordion } from 'react-bootstrap';
 import PageContainer from '../components/layout/PageContainer';
+import { FaBook, FaDatabase, FaCalculator, FaChartLine, FaExclamationTriangle, FaHistory } from 'react-icons/fa';
 
 const ResourcesPage = () => {
   return (
-    <PageContainer>
+    <PageContainer
+      backgroundImage="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=1920&q=80"
+      backgroundAlt="Industrial oil and gas facility at dusk representing energy resources"
+    >
       <Container>
         <div className="mb-4">
-          <h1 className="display-5 fw-bold">Resources & Methodology</h1>
-          <p className="lead text-muted">
+          <h1 className="h2 fw-bold text-white">
+            <FaBook className="me-2 text-warning" aria-hidden="true" />
+            Resources & Methodology
+          </h1>
+          <p className="lead text-light">
             Learn about our calculation methodology and data sources
           </p>
         </div>
 
         <Row className="mb-4">
           <Col md={12}>
-            <Card className="shadow-sm mb-4">
+            <Card className="shadow-sm mb-4 bg-dark bg-opacity-75 text-white">
               <Card.Header className="bg-primary text-white">
-                <h5 className="mb-0">Global Data Sources</h5>
+                <h2 className="h5 mb-0">
+                  <FaDatabase className="me-2" aria-hidden="true" />
+                  Global Data Sources
+                </h2>
               </Card.Header>
               <Card.Body>
                 <Row>
                   <Col md={6}>
-                    <h6>North America</h6>
-                    <ul>
+                    <h3 className="h6 text-warning">North America</h3>
+                    <ul className="text-light">
                       <li>EIA (Energy Information Administration)</li>
                       <li>Baker Hughes Rig Count</li>
                       <li>SPE (Society of Petroleum Engineers) Papers</li>
@@ -30,8 +40,8 @@ const ResourcesPage = () => {
                     </ul>
                   </Col>
                   <Col md={6}>
-                    <h6>Middle East</h6>
-                    <ul>
+                    <h3 className="h6 text-warning">Middle East</h3>
+                    <ul className="text-light">
                       <li>OPEC Annual Statistical Bulletin 2024</li>
                       <li>OPEC Cost Studies</li>
                       <li>Regional regulatory data</li>
@@ -40,16 +50,16 @@ const ResourcesPage = () => {
                 </Row>
                 <Row>
                   <Col md={6}>
-                    <h6>North Sea</h6>
-                    <ul>
+                    <h3 className="h6 text-warning">North Sea</h3>
+                    <ul className="text-light">
                       <li>UK OGA Wells Insight Database</li>
                       <li>Norwegian Petroleum Directorate</li>
                       <li>Regional cost indices</li>
                     </ul>
                   </Col>
                   <Col md={6}>
-                    <h6>Asia-Pacific & Latin America</h6>
-                    <ul>
+                    <h3 className="h6 text-warning">Asia-Pacific & Latin America</h3>
+                    <ul className="text-light">
                       <li>Wood Mackenzie Upstream Data Tool</li>
                       <li>ANP (Agência Nacional do Petróleo) Brazil</li>
                       <li>CNH Mexico</li>
@@ -62,22 +72,25 @@ const ResourcesPage = () => {
           </Col>
         </Row>
 
-        <Card className="shadow-sm mb-4">
+        <Card className="shadow-sm mb-4 bg-dark bg-opacity-75 text-white">
           <Card.Header className="bg-success text-white">
-            <h5 className="mb-0">Calculation Methodology</h5>
+            <h2 className="h5 mb-0">
+              <FaCalculator className="me-2" aria-hidden="true" />
+              Calculation Methodology
+            </h2>
           </Card.Header>
           <Card.Body>
-            <h6>Base Cost Formula (SPE-170941-MS)</h6>
+            <h3 className="h6 text-warning">Base Cost Formula (SPE-170941-MS)</h3>
             <Card className="bg-light p-3 mb-3">
               <code>
                 Total Cost = (Fixed Costs + Depth Costs + Rig Costs) × Regional Multiplier × Currency Rate
               </code>
             </Card>
 
-            <Accordion>
-              <Accordion.Item eventKey="0">
+            <Accordion className="bg-dark">
+              <Accordion.Item eventKey="0" className="bg-dark text-white border-secondary">
                 <Accordion.Header>Fixed Costs</Accordion.Header>
-                <Accordion.Body>
+                <Accordion.Body className="bg-dark text-light">
                   <p>Base fixed costs include:</p>
                   <ul>
                     <li><strong>Onshore:</strong> $500,000 (permits, site preparation, infrastructure)</li>
@@ -86,9 +99,9 @@ const ResourcesPage = () => {
                 </Accordion.Body>
               </Accordion.Item>
 
-              <Accordion.Item eventKey="1">
+              <Accordion.Item eventKey="1" className="bg-dark text-white border-secondary">
                 <Accordion.Header>Depth Costs</Accordion.Header>
-                <Accordion.Body>
+                <Accordion.Body className="bg-dark text-light">
                   <p>Cost per foot of depth:</p>
                   <ul>
                     <li><strong>Onshore:</strong> $150/foot (drilling, casing, cementing)</li>
@@ -97,13 +110,13 @@ const ResourcesPage = () => {
                 </Accordion.Body>
               </Accordion.Item>
 
-              <Accordion.Item eventKey="2">
+              <Accordion.Item eventKey="2" className="bg-dark text-white border-secondary">
                 <Accordion.Header>Rig Day Rates</Accordion.Header>
-                <Accordion.Body>
+                <Accordion.Body className="bg-dark text-light">
                   <p>Daily rig costs vary by region and type:</p>
                   <Row>
                     <Col md={6}>
-                      <h6>Onshore Rigs</h6>
+                      <h4 className="h6 text-warning">Onshore Rigs</h4>
                       <ul>
                         <li>Small: $10,000 - $15,000/day</li>
                         <li>Standard: $18,000 - $25,000/day</li>
@@ -111,7 +124,7 @@ const ResourcesPage = () => {
                       </ul>
                     </Col>
                     <Col md={6}>
-                      <h6>Offshore Rigs</h6>
+                      <h4 className="h6 text-warning">Offshore Rigs</h4>
                       <ul>
                         <li>Jackup: $55,000 - $120,000/day</li>
                         <li>Semisubmersible: $180,000 - $380,000/day</li>
@@ -122,9 +135,9 @@ const ResourcesPage = () => {
                 </Accordion.Body>
               </Accordion.Item>
 
-              <Accordion.Item eventKey="3">
+              <Accordion.Item eventKey="3" className="bg-dark text-white border-secondary">
                 <Accordion.Header>Regional Multipliers</Accordion.Header>
-                <Accordion.Body>
+                <Accordion.Body className="bg-dark text-light">
                   <p>Regional adjustments account for:</p>
                   <ul>
                     <li>Labor costs and availability</li>
@@ -146,22 +159,25 @@ const ResourcesPage = () => {
           </Card.Body>
         </Card>
 
-        <Card className="shadow-sm mb-4">
+        <Card className="shadow-sm mb-4 bg-dark bg-opacity-75 text-white">
           <Card.Header className="bg-info text-white">
-            <h5 className="mb-0">Economic Analysis Methodology</h5>
+            <h2 className="h5 mb-0">
+              <FaChartLine className="me-2" aria-hidden="true" />
+              Economic Analysis Methodology
+            </h2>
           </Card.Header>
           <Card.Body>
             <Row>
               <Col md={6}>
-                <h6>Net Present Value (NPV)</h6>
-                <p className="small">
+                <h3 className="h6 text-warning">Net Present Value (NPV)</h3>
+                <p className="small text-light">
                   Calculated using a 10% discount rate over a 3-year production profile
                   with a typical decline curve (50% Year 1, 30% Year 2, 20% Year 3).
                 </p>
               </Col>
               <Col md={6}>
-                <h6>Break-Even Price</h6>
-                <p className="small">
+                <h3 className="h6 text-warning">Break-Even Price</h3>
+                <p className="small text-light">
                   The oil price needed to recover all drilling costs and operating expenses,
                   accounting for 12.5% royalty and $15/barrel operating costs.
                 </p>
@@ -169,15 +185,15 @@ const ResourcesPage = () => {
             </Row>
             <Row>
               <Col md={6}>
-                <h6>Return on Investment (ROI)</h6>
-                <p className="small">
+                <h3 className="h6 text-warning">Return on Investment (ROI)</h3>
+                <p className="small text-light">
                   Total net revenue minus total cost, divided by total cost,
                   expressed as a percentage.
                 </p>
               </Col>
               <Col md={6}>
-                <h6>Payback Period</h6>
-                <p className="small">
+                <h3 className="h6 text-warning">Payback Period</h3>
+                <p className="small text-light">
                   Time in months to recover the initial drilling investment
                   from production revenue.
                 </p>
@@ -186,11 +202,14 @@ const ResourcesPage = () => {
           </Card.Body>
         </Card>
 
-        <Card className="shadow-sm mb-4">
+        <Card className="shadow-sm mb-4 bg-dark bg-opacity-75">
           <Card.Header className="bg-warning text-dark">
-            <h5 className="mb-0">Important Disclaimers</h5>
+            <h2 className="h5 mb-0">
+              <FaExclamationTriangle className="me-2" aria-hidden="true" />
+              Important Disclaimers
+            </h2>
           </Card.Header>
-          <Card.Body>
+          <Card.Body className="text-light">
             <ul className="mb-0">
               <li>All costs are estimates based on public data and industry averages</li>
               <li>Actual drilling costs vary significantly based on specific site conditions</li>
@@ -202,11 +221,14 @@ const ResourcesPage = () => {
           </Card.Body>
         </Card>
 
-        <Card className="shadow-sm">
-          <Card.Header className="bg-dark text-white">
-            <h5 className="mb-0">Version History</h5>
+        <Card className="shadow-sm bg-dark bg-opacity-75">
+          <Card.Header className="bg-secondary text-white">
+            <h2 className="h5 mb-0">
+              <FaHistory className="me-2" aria-hidden="true" />
+              Version History
+            </h2>
           </Card.Header>
-          <Card.Body>
+          <Card.Body className="text-light">
             <ul className="mb-0">
               <li><strong>v1.0:</strong> US-only calculator with basic features</li>
               <li><strong>v2.0:</strong> Global expansion with regional data</li>

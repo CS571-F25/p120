@@ -18,11 +18,11 @@ const CostBarChart = ({ scenarios }) => {
   return (
     <Card className="shadow-sm mb-4">
       <Card.Header className="bg-warning text-dark">
-        <h5 className="mb-0">Scenario Comparison</h5>
+        <p className="h5 mb-0">Scenario Comparison</p>
       </Card.Header>
       <Card.Body>
         <ResponsiveContainer width="100%" height={400}>
-          <BarChart data={data}>
+          <BarChart data={data} role="img" aria-label="Bar chart comparing costs across saved drilling scenarios">
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis tickFormatter={formatCurrency} />

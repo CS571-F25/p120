@@ -8,7 +8,7 @@ import DrillingDaysSlider from './DrillingDaysSlider';
 import GlobalDrillingCalculator from '../../utils/calculators/globalCostCalculator';
 import { CURRENCY_SYMBOLS } from '../../utils/calculators/regionalData';
 
-const WellInputForm = ({ onCalculate }) => {
+const WellInputForm = ({ onCalculate, compact = false }) => {
   const [formData, setFormData] = useState({
     depth: 10000,
     region: 'USA',
@@ -56,80 +56,90 @@ const WellInputForm = ({ onCalculate }) => {
     }));
   };
 
+  // For compact mode, render just the form without the card wrapper
+  const formContent = (
+    <Form>
+      <DepthInput
+        value={formData.depth}
+        onChange={(depth) => setFormData(prev => ({ ...prev, depth }))}
+        compact={compact}
+      />
+
+      <LocationSelector
+        value={formData.location}
+        onChange={handleLocationChange}
+        compact={compact}
+      />
+
+      <RegionSelector
+        region={formData.region}
+        country={formData.country}
+        onRegionChange={handleRegionChange}
+        compact={compact}
+      />
+
+      <RigTypeSelector
+        value={formData.rigType}
+        onChange={(rigType) => setFormData(prev => ({ ...prev, rigType }))}
+        location={formData.location}
+        region={formData.region}
+        compact={compact}
+      />
+
+      <Form.Group className={compact ? "mb-2" : "mb-3"}>
+        <Form.Label htmlFor="currency-select" className={compact ? "small mb-1" : ""}>
+          Currency
+        </Form.Label>
+        <Form.Select
+          id="currency-select"
+          size={compact ? "sm" : undefined}
+          value={formData.currency}
+          onChange={(e) => setFormData(prev => ({ ...prev, currency: e.target.value }))}
+          aria-label="Select currency for cost display"
+        >
+          {Object.keys(CURRENCY_SYMBOLS).map(curr => (
+            <option key={curr} value={curr}>
+              {curr} ({CURRENCY_SYMBOLS[curr]})
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
+
+      <DrillingDaysSlider
+        value={formData.drillingDays}
+        onChange={(drillingDays) => setFormData(prev => ({ ...prev, drillingDays }))}
+        compact={compact}
+      />
+
+      <Form.Group className={compact ? "mb-2" : "mb-3"}>
+        <Form.Label htmlFor="oil-price-input" className={compact ? "small mb-1" : ""}>
+          Oil Price ($/barrel)
+        </Form.Label>
+        <Form.Control
+          id="oil-price-input"
+          type="number"
+          size={compact ? "sm" : undefined}
+          value={formData.oilPrice}
+          onChange={(e) => setFormData(prev => ({ ...prev, oilPrice: parseFloat(e.target.value) || 75 }))}
+          min="20"
+          max="200"
+          step="1"
+        />
+      </Form.Group>
+    </Form>
+  );
+
+  if (compact) {
+    return formContent;
+  }
+
   return (
     <Card className="shadow-sm">
       <Card.Header className="bg-primary text-white">
-        <h5 className="mb-0">Well Parameters</h5>
+        <h2 className="h5 mb-0">Well Parameters</h2>
       </Card.Header>
       <Card.Body>
-        <Form>
-          <Row>
-            <Col md={6}>
-              <DepthInput
-                value={formData.depth}
-                onChange={(depth) => setFormData(prev => ({ ...prev, depth }))}
-              />
-            </Col>
-            <Col md={6}>
-              <LocationSelector
-                value={formData.location}
-                onChange={handleLocationChange}
-              />
-            </Col>
-          </Row>
-
-          <RegionSelector
-            region={formData.region}
-            country={formData.country}
-            onRegionChange={handleRegionChange}
-          />
-
-          <Row>
-            <Col md={6}>
-              <RigTypeSelector
-                value={formData.rigType}
-                onChange={(rigType) => setFormData(prev => ({ ...prev, rigType }))}
-                location={formData.location}
-                region={formData.region}
-              />
-            </Col>
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Currency</Form.Label>
-                <Form.Select
-                  value={formData.currency}
-                  onChange={(e) => setFormData(prev => ({ ...prev, currency: e.target.value }))}
-                >
-                  {Object.keys(CURRENCY_SYMBOLS).map(curr => (
-                    <option key={curr} value={curr}>
-                      {curr} ({CURRENCY_SYMBOLS[curr]})
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </Col>
-          </Row>
-
-          <DrillingDaysSlider
-            value={formData.drillingDays}
-            onChange={(drillingDays) => setFormData(prev => ({ ...prev, drillingDays }))}
-          />
-
-          <Form.Group className="mb-3">
-            <Form.Label>Oil Price ($/barrel) for Economic Analysis</Form.Label>
-            <Form.Control
-              type="number"
-              value={formData.oilPrice}
-              onChange={(e) => setFormData(prev => ({ ...prev, oilPrice: parseFloat(e.target.value) || 75 }))}
-              min="20"
-              max="200"
-              step="1"
-            />
-            <Form.Text className="text-muted">
-              Current WTI crude oil price assumption
-            </Form.Text>
-          </Form.Group>
-        </Form>
+        {formContent}
       </Card.Body>
     </Card>
   );

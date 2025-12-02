@@ -1,7 +1,7 @@
 import { Form } from 'react-bootstrap';
 import { GLOBAL_RIG_RATES } from '../../utils/calculators/regionalData';
 
-const RigTypeSelector = ({ value, onChange, location, region }) => {
+const RigTypeSelector = ({ value, onChange, location, region, compact = false }) => {
   // Get available rig types based on location and region
   const getAvailableRigTypes = () => {
     const regionRates = GLOBAL_RIG_RATES[region] || GLOBAL_RIG_RATES.USA;
@@ -22,16 +22,20 @@ const RigTypeSelector = ({ value, onChange, location, region }) => {
   const rigTypes = getAvailableRigTypes();
 
   return (
-    <Form.Group className="mb-3">
-      <Form.Label>Rig Type</Form.Label>
+    <Form.Group className={compact ? "mb-2" : "mb-3"}>
+      <Form.Label htmlFor="rig-type-select" className={compact ? "small mb-1" : ""}>
+        Rig Type
+      </Form.Label>
       <Form.Select
+        id="rig-type-select"
+        size={compact ? "sm" : undefined}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-label="Select rig type"
         disabled={rigTypes.length === 0}
       >
         {rigTypes.length === 0 ? (
-          <option>No rigs available for this region/location</option>
+          <option>No rigs available</option>
         ) : (
           rigTypes.map(({ value: rigValue, label, rate }) => (
             <option key={rigValue} value={rigValue}>
@@ -40,9 +44,11 @@ const RigTypeSelector = ({ value, onChange, location, region }) => {
           ))
         )}
       </Form.Select>
-      <Form.Text className="text-muted">
-        Day rates vary by region and rig capabilities
-      </Form.Text>
+      {!compact && (
+        <Form.Text className="text-muted">
+          Day rates vary by region and rig capabilities
+        </Form.Text>
+      )}
     </Form.Group>
   );
 };

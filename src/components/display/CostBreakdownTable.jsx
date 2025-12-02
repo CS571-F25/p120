@@ -17,7 +17,7 @@ const CostBreakdownTable = ({ results }) => {
   return (
     <Card className="shadow-sm mb-4">
       <Card.Header className="bg-info text-white">
-        <h5 className="mb-0">Cost Breakdown Analysis</h5>
+        <p className="h5 mb-0">Cost Breakdown Analysis</p>
       </Card.Header>
       <Card.Body>
         <Table striped bordered hover responsive>

@@ -66,19 +66,22 @@ const ScenarioSaveButton = ({ results, onSave }) => {
 
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>Scenario Name *</Form.Label>
+              <Form.Label htmlFor="scenario-name-input">Scenario Name *</Form.Label>
               <Form.Control
+                id="scenario-name-input"
                 type="text"
                 placeholder="e.g., Permian Basin Deep Well"
                 value={scenarioName}
                 onChange={(e) => setScenarioName(e.target.value)}
                 autoFocus
+                aria-required="true"
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Notes (Optional)</Form.Label>
+              <Form.Label htmlFor="scenario-notes-input">Notes (Optional)</Form.Label>
               <Form.Control
+                id="scenario-notes-input"
                 as="textarea"
                 rows={3}
                 placeholder="Add any additional notes about this scenario..."

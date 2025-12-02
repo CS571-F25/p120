@@ -1,5 +1,6 @@
 import { Card, Row, Col, Badge, Alert } from 'react-bootstrap';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { FaChartLine, FaDollarSign, FaPercentage, FaClock } from 'react-icons/fa';
 
 const EconomicDashboard = ({ economics, drillingCost }) => {
   if (!economics) return null;
@@ -51,66 +52,69 @@ const EconomicDashboard = ({ economics, drillingCost }) => {
   };
 
   return (
-    <div>
-      <Card className="shadow-sm mb-4">
-        <Card.Header className="bg-dark text-white">
-          <h5 className="mb-0">Economic Analysis Results</h5>
+    <div role="region" aria-label="Economic Analysis Results">
+      <Row className="mb-4 g-3">
+        <Col md={3} sm={6}>
+          <Card className="border-primary h-100">
+            <Card.Body className="text-center">
+              <FaDollarSign className="text-primary mb-2" style={{ fontSize: '1.5rem' }} aria-hidden="true" />
+              <p className="text-muted small mb-1">Break-Even Price</p>
+              <p className="h4 mb-2">${breakEvenPrice.toFixed(2)}/barrel</p>
+              <Badge bg={breakEvenPrice < 50 ? 'success' : 'warning'}>
+                {breakEvenPrice < 50 ? 'Low risk' : 'Higher risk'}
+              </Badge>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={3} sm={6}>
+          <Card className="border-success h-100">
+            <Card.Body className="text-center">
+              <FaChartLine className="text-success mb-2" style={{ fontSize: '1.5rem' }} aria-hidden="true" />
+              <p className="text-muted small mb-1">Net Present Value (NPV)</p>
+              <p className={`h4 mb-2 text-${getStatusColor(npv)}`}>
+                {formatCurrency(npv)}
+              </p>
+              <Badge bg={getStatusColor(npv)}>
+                {npv > 0 ? 'Profitable' : 'Not profitable'}
+              </Badge>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={3} sm={6}>
+          <Card className="border-info h-100">
+            <Card.Body className="text-center">
+              <FaPercentage className="text-info mb-2" style={{ fontSize: '1.5rem' }} aria-hidden="true" />
+              <p className="text-muted small mb-1">Return on Investment</p>
+              <p className={`h4 mb-2 text-${getStatusColor(roi)}`}>
+                {roi.toFixed(1)}%
+              </p>
+              <Badge bg={getStatusColor(roi)}>
+                {roi > 20 ? 'Strong returns' : 'Marginal returns'}
+              </Badge>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={3} sm={6}>
+          <Card className="border-warning h-100">
+            <Card.Body className="text-center">
+              <FaClock className="text-warning mb-2" style={{ fontSize: '1.5rem' }} aria-hidden="true" />
+              <p className="text-muted small mb-1">Payback Period</p>
+              <p className="h4 mb-2">{paybackMonths.toFixed(1)} months</p>
+              <Badge bg={paybackMonths < 24 ? 'success' : 'warning'}>
+                {paybackMonths < 24 ? 'Quick recovery' : 'Extended recovery'}
+              </Badge>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      <Card className="mb-4">
+        <Card.Header className="bg-light">
+          <p className="h6 mb-0">NPV Sensitivity to Oil Price</p>
         </Card.Header>
         <Card.Body>
-          <Row className="mb-4">
-            <Col md={3}>
-              <Card className="border-primary h-100">
-                <Card.Body className="text-center">
-                  <h6 className="text-muted small">Break-Even Price</h6>
-                  <h4>${breakEvenPrice.toFixed(2)}/barrel</h4>
-                  <Badge bg={breakEvenPrice < 50 ? 'success' : 'warning'}>
-                    {breakEvenPrice < 50 ? 'Low risk' : 'Higher risk'}
-                  </Badge>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={3}>
-              <Card className="border-success h-100">
-                <Card.Body className="text-center">
-                  <h6 className="text-muted small">Net Present Value (NPV)</h6>
-                  <h4 className={`text-${getStatusColor(npv)}`}>
-                    {formatCurrency(npv)}
-                  </h4>
-                  <Badge bg={getStatusColor(npv)}>
-                    {npv > 0 ? 'Profitable' : 'Not profitable'}
-                  </Badge>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={3}>
-              <Card className="border-info h-100">
-                <Card.Body className="text-center">
-                  <h6 className="text-muted small">Return on Investment</h6>
-                  <h4 className={`text-${getStatusColor(roi)}`}>
-                    {roi.toFixed(1)}%
-                  </h4>
-                  <Badge bg={getStatusColor(roi)}>
-                    {roi > 20 ? 'Strong returns' : 'Marginal returns'}
-                  </Badge>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={3}>
-              <Card className="border-warning h-100">
-                <Card.Body className="text-center">
-                  <h6 className="text-muted small">Payback Period</h6>
-                  <h4>{paybackMonths.toFixed(1)} months</h4>
-                  <Badge bg={paybackMonths < 24 ? 'success' : 'warning'}>
-                    {paybackMonths < 24 ? 'Quick recovery' : 'Extended recovery'}
-                  </Badge>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-
-          <h6 className="mb-3">NPV Sensitivity to Oil Price</h6>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={sensitivity}>
+            <LineChart data={sensitivity} role="img" aria-label="Chart showing NPV sensitivity to oil price changes">
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="oilPrice"
@@ -125,9 +129,10 @@ const EconomicDashboard = ({ economics, drillingCost }) => {
                   if (name === 'npv') return [formatCurrency(value), 'NPV'];
                   return [value, name];
                 }}
+                contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #ccc' }}
               />
               <Legend />
-              <ReferenceLine y={0} stroke="red" strokeDasharray="3 3" label="Break-even" />
+              <ReferenceLine y={0} stroke="#dc3545" strokeDasharray="3 3" label={{ value: 'Break-even', fill: '#dc3545' }} />
               <Line
                 type="monotone"
                 dataKey="npv"
@@ -138,16 +143,16 @@ const EconomicDashboard = ({ economics, drillingCost }) => {
               />
             </LineChart>
           </ResponsiveContainer>
-
-          <Alert variant={recommendation.variant} className="mt-4">
-            <Alert.Heading>
-              <span className="me-2">{recommendation.icon}</span>
-              {recommendation.title}
-            </Alert.Heading>
-            <p className="mb-0">{recommendation.message}</p>
-          </Alert>
         </Card.Body>
       </Card>
+
+      <Alert variant={recommendation.variant}>
+        <Alert.Heading>
+          <span className="me-2" aria-hidden="true">{recommendation.icon}</span>
+          {recommendation.title}
+        </Alert.Heading>
+        <p className="mb-0">{recommendation.message}</p>
+      </Alert>
     </div>
   );
 };
