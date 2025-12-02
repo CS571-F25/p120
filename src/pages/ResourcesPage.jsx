@@ -234,6 +234,9 @@ const ResourcesPage = () => {
               <li><strong>v2.0:</strong> Global expansion with regional data</li>
               <li><strong>v2.1:</strong> Added currency conversion and economic analysis</li>
               <li><strong>v2.2:</strong> Enhanced accessibility and mobile responsiveness</li>
+              <li><strong>v3.0:</strong> Economic analysis available on saved scenarios</li>
+              <li><strong>v3.1:</strong> Pages reorganized and saved scenarios are printable</li>
+              <li><strong>v3.2:</strong> UI complete redesigned</li>
             </ul>
           </Card.Body>
         </Card>

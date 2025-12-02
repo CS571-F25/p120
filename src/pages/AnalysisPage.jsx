@@ -152,7 +152,7 @@ const AnalysisPage = () => {
             <p className="text-light mb-0">Analyze, compare, and manage your saved drilling scenarios</p>
           </div>
           <div className="d-flex gap-2">
-            {scenarios.length > 1 && (
+            {scenarios.length >= 1 && (
               <Button variant="warning" onClick={() => setShowComparisonModal(true)} className="fw-bold">
                 <FaChartBar className="me-2" aria-hidden="true" />Compare Scenarios
               </Button>
@@ -173,13 +173,13 @@ const AnalysisPage = () => {
         ) : (
           <Row className="g-4">
             {scenarios.map((scenario) => (
-              <Col key={scenario.id} lg={6} xl={4}>
-                <Card className="h-100 shadow bg-dark bg-opacity-75 text-white border-0">
+              <Col key={scenario.id} md={4} sm={6} xs={12}>
+                <Card className="shadow bg-dark bg-opacity-75 text-white border-0" style={{ minHeight: '380px' }}>
                   <Card.Header className="bg-primary border-0">
-                    <h2 className="h5 mb-0">{scenario.name}</h2>
+                    <h2 className="h5 mb-0 text-truncate">{scenario.name}</h2>
                     <small className="text-light">{new Date(scenario.savedAt).toLocaleDateString()}</small>
                   </Card.Header>
-                  <Card.Body>
+                  <Card.Body className="d-flex flex-column">
                     <div className="text-center mb-3">
                       <p className="h2 text-warning mb-0">{formatCurrency(scenario.totalCost, scenario.currency)}</p>
                       <p className="text-light small mb-0">Total Estimated Cost</p>
@@ -188,8 +188,8 @@ const AnalysisPage = () => {
                       <Col xs={6}><div className="bg-dark rounded p-2"><p className="small text-muted mb-0">Region</p><p className="small mb-0">{formatCountryName(scenario.params?.country)}</p></div></Col>
                       <Col xs={6}><div className="bg-dark rounded p-2"><p className="small text-muted mb-0">Depth</p><p className="small mb-0">{scenario.params?.depth?.toLocaleString()} ft</p></div></Col>
                     </Row>
-                    {scenario.notes && <p className="small text-light mb-3"><strong>Notes:</strong> {scenario.notes}</p>}
-                    <div className="d-grid gap-2">
+                    {scenario.notes && <p className="small text-light mb-2 text-truncate"><strong>Notes:</strong> {scenario.notes}</p>}
+                    <div className="d-grid gap-2 mt-auto">
                       <Button variant="success" onClick={() => handleViewEconomics(scenario)}><FaChartLine className="me-2" aria-hidden="true" />Economic Analysis</Button>
                       <div className="d-flex gap-2">
                         <Button variant="info" className="flex-grow-1" onClick={() => handleViewDetails(scenario)}><FaEye className="me-2" aria-hidden="true" />View Details</Button>
