@@ -7,7 +7,7 @@ import CostPieChart from '../components/display/CostPieChart';
 import EconomicDashboard from '../components/display/EconomicDashboard';
 import { storage } from '../utils/storage';
 import { EconomicAnalyzer } from '../utils/calculators/economicAnalysis';
-import { formatRegionName, formatCountryName, CURRENCY_SYMBOLS } from '../utils/calculators/regionalData';
+import { formatRegionName, formatCountryName, CURRENCY_SYMBOLS, STATIC_EXCHANGE_RATES } from '../utils/calculators/regionalData';
 import { FaChartBar, FaEye, FaChartLine, FaPrint, FaTrash, FaExclamationTriangle } from 'react-icons/fa';
 
 const AnalysisPage = () => {
@@ -68,7 +68,20 @@ const AnalysisPage = () => {
     );
 
     const printWindow = window.open('', '_blank');
-    const symbol = CURRENCY_SYMBOLS[scenario.currency] || '$';
+    const currency = scenario.currency || 'USD';
+    const symbol = CURRENCY_SYMBOLS[currency] || '$';
+    const exchangeRate = STATIC_EXCHANGE_RATES[currency] || 1;
+
+    // Convert economic values to selected currency
+    const convertedBreakEven = economicResults.breakEvenPrice * exchangeRate;
+    const convertedNpv = economicResults.npv * exchangeRate;
+
+    // Convert breakdown costs to selected currency
+    const convertedBreakdown = scenario.breakdown?.map(item => ({
+      ...item,
+      baseCost: item.baseCost * exchangeRate,
+      finalCost: item.finalCost * exchangeRate
+    })) || [];
 
     printWindow.document.write(`
       <!DOCTYPE html>
@@ -92,7 +105,7 @@ const AnalysisPage = () => {
         <div class="header">
           <h1>WellWise Drilling Cost Report</h1>
           <h2>${scenario.name}</h2>
-          <p>Generated on: ${new Date().toLocaleDateString()}</p>
+          <p>Generated on: ${new Date().toLocaleDateString()} | Currency: ${currency}</p>
         </div>
         <div class="section">
           <h3>Scenario Details</h3>
@@ -107,14 +120,14 @@ const AnalysisPage = () => {
         <div class="section">
           <h3>Cost Breakdown</h3>
           <table><thead><tr><th>Component</th><th>Base Cost</th><th>Multiplier</th><th>Final Cost</th><th>%</th></tr></thead><tbody>
-          ${scenario.breakdown?.map(item => `<tr><td>${item.name}</td><td>${symbol}${item.baseCost?.toLocaleString()}</td><td>${item.multiplier}x</td><td>${symbol}${item.finalCost?.toLocaleString()}</td><td>${item.percentage?.toFixed(1)}%</td></tr>`).join('') || ''}
+          ${convertedBreakdown.map(item => `<tr><td>${item.name}</td><td>${symbol}${Math.round(item.baseCost)?.toLocaleString()}</td><td>${item.multiplier}x</td><td>${symbol}${Math.round(item.finalCost)?.toLocaleString()}</td><td>${item.percentage?.toFixed(1)}%</td></tr>`).join('')}
           </tbody></table>
         </div>
         <div class="section">
           <h3>Economic Analysis</h3>
           <div class="row">
-            <div class="col-3"><div class="metric-card"><p class="text-muted small mb-1">Break-Even Price</p><h5>$${economicResults.breakEvenPrice?.toFixed(2)}/bbl</h5></div></div>
-            <div class="col-3"><div class="metric-card"><p class="text-muted small mb-1">NPV</p><h5>$${(economicResults.npv / 1000000)?.toFixed(2)}M</h5></div></div>
+            <div class="col-3"><div class="metric-card"><p class="text-muted small mb-1">Break-Even Price</p><h5>${symbol}${convertedBreakEven?.toFixed(2)}/bbl</h5></div></div>
+            <div class="col-3"><div class="metric-card"><p class="text-muted small mb-1">NPV</p><h5>${symbol}${(convertedNpv / 1000000)?.toFixed(2)}M</h5></div></div>
             <div class="col-3"><div class="metric-card"><p class="text-muted small mb-1">ROI</p><h5>${economicResults.roi?.toFixed(1)}%</h5></div></div>
             <div class="col-3"><div class="metric-card"><p class="text-muted small mb-1">Payback</p><h5>${economicResults.paybackMonths?.toFixed(1)} mo</h5></div></div>
           </div>
@@ -226,7 +239,7 @@ const AnalysisPage = () => {
           <Modal.Header closeButton className="bg-success text-white">
             <Modal.Title><FaChartLine className="me-2" aria-hidden="true" />{selectedScenario?.name} - Economic Analysis</Modal.Title>
           </Modal.Header>
-          <Modal.Body>{selectedScenario && economics && <EconomicDashboard economics={economics} drillingCost={selectedScenario.totalCost} />}</Modal.Body>
+          <Modal.Body>{selectedScenario && economics && <EconomicDashboard economics={economics} drillingCost={selectedScenario.totalCost} currency={selectedScenario.currency || 'USD'} />}</Modal.Body>
           <Modal.Footer><Button variant="secondary" onClick={() => setShowEconomicsModal(false)}>Close</Button></Modal.Footer>
         </Modal>
 

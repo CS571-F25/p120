@@ -1,14 +1,22 @@
 import { Card, Table, Badge } from 'react-bootstrap';
-import { CURRENCY_SYMBOLS } from '../../utils/calculators/regionalData';
+import { CURRENCY_SYMBOLS, STATIC_EXCHANGE_RATES } from '../../utils/calculators/regionalData';
 
 const CostBreakdownTable = ({ results, compact = false }) => {
   if (!results || !results.breakdown) return null;
 
-  const { breakdown, currency } = results;
+  const { breakdown, currency = 'USD' } = results;
+  const currencySymbol = CURRENCY_SYMBOLS[currency] || '$';
+  const exchangeRate = STATIC_EXCHANGE_RATES[currency] || 1;
+
+  // Convert USD values to selected currency
+  const convertedBreakdown = breakdown.map(item => ({
+    ...item,
+    baseCost: item.baseCost * exchangeRate,
+    finalCost: item.finalCost * exchangeRate
+  }));
 
   const formatCurrency = (amount) => {
-    const symbol = CURRENCY_SYMBOLS[currency] || '$';
-    return `${symbol}${amount.toLocaleString('en-US', {
+    return `${currencySymbol}${amount.toLocaleString('en-US', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     })}`;
@@ -26,7 +34,7 @@ const CostBreakdownTable = ({ results, compact = false }) => {
         </tr>
       </thead>
       <tbody>
-        {breakdown.map((item, index) => (
+        {convertedBreakdown.map((item, index) => (
           <tr key={index}>
             <td className={compact ? "small" : ""}>{item.name.split('(')[0].trim()}</td>
             {!compact && <td>{formatCurrency(item.baseCost)}</td>}
@@ -44,14 +52,14 @@ const CostBreakdownTable = ({ results, compact = false }) => {
           {!compact && (
             <td>
               {formatCurrency(
-                breakdown.reduce((sum, item) => sum + item.baseCost, 0)
+                convertedBreakdown.reduce((sum, item) => sum + item.baseCost, 0)
               )}
             </td>
           )}
           <td>-</td>
           <td>
             {formatCurrency(
-              breakdown.reduce((sum, item) => sum + item.finalCost, 0)
+              convertedBreakdown.reduce((sum, item) => sum + item.finalCost, 0)
             )}
           </td>
           <td>100%</td>

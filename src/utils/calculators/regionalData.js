@@ -112,16 +112,20 @@ export const CURRENCY_SYMBOLS = {
   NOK: 'kr'
 };
 
-// Static exchange rates as fallback
+// Static exchange rates (Retrieved: December 2, 2025)
+// Source: Federal Reserve, OANDA, exchange-rates.org
 export const STATIC_EXCHANGE_RATES = {
   USD: 1.0,
-  GBP: 0.79,
-  EUR: 0.92,
-  SAR: 3.75,
-  AUD: 1.53,
-  BRL: 5.67,
-  NOK: 10.85
+  GBP: 0.7564,   // 1 USD = 0.7564 GBP
+  EUR: 0.8599,   // 1 USD = 0.8599 EUR
+  SAR: 3.753,    // 1 USD = 3.753 SAR
+  AUD: 1.5212,   // 1 USD = 1.5212 AUD
+  BRL: 5.34,     // 1 USD = 5.34 BRL
+  NOK: 10.133    // 1 USD = 10.133 NOK
 };
+
+// Exchange rates retrieval date for display
+export const EXCHANGE_RATES_DATE = 'December 2, 2025';
 
 // Free API for currency conversion (1500 requests/month free)
 export const getCurrencyRates = async () => {

@@ -1,11 +1,27 @@
 import { Card, Row, Col, Badge, Alert } from 'react-bootstrap';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { FaChartLine, FaDollarSign, FaPercentage, FaClock } from 'react-icons/fa';
+import { CURRENCY_SYMBOLS, STATIC_EXCHANGE_RATES } from '../../utils/calculators/regionalData';
 
-const EconomicDashboard = ({ economics, drillingCost }) => {
+const EconomicDashboard = ({ economics, drillingCost, currency = 'USD' }) => {
   if (!economics) return null;
 
   const { breakEvenPrice, npv, roi, paybackMonths, sensitivity } = economics;
+
+  // Get currency symbol and exchange rate for conversion
+  const currencySymbol = CURRENCY_SYMBOLS[currency] || '$';
+  const exchangeRate = STATIC_EXCHANGE_RATES[currency] || 1;
+
+  // Convert USD values to selected currency
+  const convertedNpv = npv * exchangeRate;
+  const convertedBreakEven = breakEvenPrice * exchangeRate;
+
+  // Convert sensitivity data to selected currency
+  const convertedSensitivity = sensitivity.map(item => ({
+    ...item,
+    oilPrice: item.oilPrice * exchangeRate,
+    npv: item.npv * exchangeRate
+  }));
 
   const getStatusColor = (value) => {
     if (value > 0) return 'success';
@@ -48,7 +64,11 @@ const EconomicDashboard = ({ economics, drillingCost }) => {
   const recommendation = getRecommendation();
 
   const formatCurrency = (value) => {
-    return `$${(value / 1000000).toFixed(2)}M`;
+    return `${currencySymbol}${(value / 1000000).toFixed(2)}M`;
+  };
+
+  const formatPrice = (value) => {
+    return `${currencySymbol}${value.toFixed(2)}`;
   };
 
   return (
@@ -59,7 +79,7 @@ const EconomicDashboard = ({ economics, drillingCost }) => {
             <Card.Body className="text-center">
               <FaDollarSign className="text-primary mb-2" style={{ fontSize: '1.5rem' }} aria-hidden="true" />
               <p className="text-muted small mb-1">Break-Even Price</p>
-              <p className="h4 mb-2">${breakEvenPrice.toFixed(2)}/barrel</p>
+              <p className="h4 mb-2">{formatPrice(convertedBreakEven)}/barrel</p>
               <Badge bg={breakEvenPrice < 50 ? 'success' : 'warning'}>
                 {breakEvenPrice < 50 ? 'Low risk' : 'Higher risk'}
               </Badge>
@@ -72,7 +92,7 @@ const EconomicDashboard = ({ economics, drillingCost }) => {
               <FaChartLine className="text-success mb-2" style={{ fontSize: '1.5rem' }} aria-hidden="true" />
               <p className="text-muted small mb-1">Net Present Value (NPV)</p>
               <p className={`h4 mb-2 text-${getStatusColor(npv)}`}>
-                {formatCurrency(npv)}
+                {formatCurrency(convertedNpv)}
               </p>
               <Badge bg={getStatusColor(npv)}>
                 {npv > 0 ? 'Profitable' : 'Not profitable'}
@@ -110,25 +130,27 @@ const EconomicDashboard = ({ economics, drillingCost }) => {
 
       <Card className="mb-4">
         <Card.Header className="bg-light">
-          <p className="h6 mb-0">NPV Sensitivity to Oil Price</p>
+          <p className="h6 mb-0">NPV Sensitivity to Oil Price ({currency})</p>
         </Card.Header>
         <Card.Body>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={sensitivity} role="img" aria-label="Chart showing NPV sensitivity to oil price changes">
+            <LineChart data={convertedSensitivity} role="img" aria-label="Chart showing NPV sensitivity to oil price changes">
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="oilPrice"
-                label={{ value: 'Oil Price ($/barrel)', position: 'insideBottom', offset: -5 }}
+                tickFormatter={(value) => `${currencySymbol}${value.toFixed(0)}`}
+                label={{ value: `Oil Price (${currencySymbol}/barrel)`, position: 'insideTop', offset: 22 }}
               />
               <YAxis
-                tickFormatter={formatCurrency}
-                label={{ value: 'NPV', angle: -90, position: 'insideLeft' }}
+                tickFormatter={(value) => `${Math.round(value / 1000000)}M`}
+                label={{ value: `NPV (${currencySymbol})`, angle: -90, position: 'insideLeft', offset: 75}}
               />
               <Tooltip
                 formatter={(value, name) => {
                   if (name === 'npv') return [formatCurrency(value), 'NPV'];
-                  return [value, name];
+                  return [`${currencySymbol}${value.toFixed(2)}`, name];
                 }}
+                labelFormatter={(label) => `Oil Price: ${currencySymbol}${label.toFixed(2)}/barrel`}
                 contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #ccc' }}
               />
               <Legend />

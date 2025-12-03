@@ -1,15 +1,18 @@
 import { Card } from 'react-bootstrap';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { CURRENCY_SYMBOLS, STATIC_EXCHANGE_RATES } from '../../utils/calculators/regionalData';
 
 const CostPieChart = ({ results, compact = false }) => {
   if (!results || !results.breakdown) return null;
 
-  const { breakdown } = results;
+  const { breakdown, currency = 'USD' } = results;
+  const currencySymbol = CURRENCY_SYMBOLS[currency] || '$';
+  const exchangeRate = STATIC_EXCHANGE_RATES[currency] || 1;
 
-  // Prepare data for pie chart
+  // Prepare data for pie chart with currency conversion
   const data = breakdown.map(item => ({
     name: item.name.split('(')[0].trim(), // Shorten name for display
-    value: item.finalCost,
+    value: item.finalCost * exchangeRate, // Convert to selected currency
     percentage: item.percentage
   }));
 
@@ -22,7 +25,7 @@ const CostPieChart = ({ results, compact = false }) => {
   ];
 
   const formatCurrency = (value) => {
-    return `$${(value / 1000000).toFixed(2)}M`;
+    return `${currencySymbol}${(value / 1000000).toFixed(2)}M`;
   };
 
   // Custom label renderer that places percentage inside pie slice with proper contrast

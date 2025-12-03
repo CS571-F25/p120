@@ -1,6 +1,7 @@
-import { Container, Card, Row, Col, Badge, Accordion } from 'react-bootstrap';
+import { Container, Card, Row, Col, Badge, Accordion, Table } from 'react-bootstrap';
 import PageContainer from '../components/layout/PageContainer';
 import { FaBook, FaDatabase, FaCalculator, FaChartLine, FaExclamationTriangle, FaHistory } from 'react-icons/fa';
+import { STATIC_EXCHANGE_RATES, CURRENCY_SYMBOLS, EXCHANGE_RATES_DATE } from '../utils/calculators/regionalData';
 
 const ResourcesPage = () => {
   return (
@@ -210,7 +211,7 @@ const ResourcesPage = () => {
             </h2>
           </Card.Header>
           <Card.Body className="text-light">
-            <ul className="mb-0">
+            <ul className="mb-4">
               <li>All costs are estimates based on public data and industry averages</li>
               <li>Actual drilling costs vary significantly based on specific site conditions</li>
               <li>Regional multipliers are updated quarterly from IHS Markit UCCI</li>
@@ -218,6 +219,32 @@ const ResourcesPage = () => {
               <li>For commercial use, always validate estimates with local drilling contractors</li>
               <li>Economic analysis assumes typical production profiles and may not reflect actual well performance</li>
             </ul>
+
+            <h3 className="h6 text-warning">Currency Exchange Rates</h3>
+            <p className="small mb-2">
+              <strong>Retrieved:</strong> {EXCHANGE_RATES_DATE} | <strong>Source:</strong> Federal Reserve, OANDA, exchange-rates.org
+            </p>
+            <Table size="sm" bordered className="mb-0" variant="dark">
+              <thead>
+                <tr>
+                  <th>Currency</th>
+                  <th>Symbol</th>
+                  <th>Rate (per 1 USD)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(STATIC_EXCHANGE_RATES).filter(([key]) => key !== 'USD').map(([currency, rate]) => (
+                  <tr key={currency}>
+                    <td>{currency}</td>
+                    <td>{CURRENCY_SYMBOLS[currency]}</td>
+                    <td>{rate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <p className="small text-muted mt-2 mb-0">
+              * Exchange rates are static and may not reflect current market conditions. For accurate conversions, verify with live exchange rate sources.
+            </p>
           </Card.Body>
         </Card>
 
